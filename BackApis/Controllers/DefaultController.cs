@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Threading;
+using BackApis.Helpers;
 
 namespace BackApis.Controllers
 {
@@ -32,10 +33,10 @@ namespace BackApis.Controllers
         [HttpGet]
         public Task<HttpResponseMessage> GetMeeting()
         {
-            int result;
+            long result;
             if (MeetingsControl.Meetings.TryDequeue(out result))
             {
-                return Task.FromResult<HttpResponseMessage>(Request.CreateResponse(HttpStatusCode.OK, $"result:{result},Count:{MeetingsControl.Meetings.Count}"));
+                return Task.FromResult<HttpResponseMessage>(Request.CreateResponse(HttpStatusCode.OK, result.ToString()));
             }
             else
             {
@@ -48,17 +49,32 @@ namespace BackApis.Controllers
         public Task<HttpResponseMessage> GetSignature(JObject _lLicencesDataInfoObj)
         {
             Thread.Sleep(2000);
-            string apiKey = "MbhIt-Z8T5iospJ_FaMNRw";
-            string apiSecret = "ii9VKoAX280w7ZwZrX0TKT1dkqNU4NMZBMiY";
+            string apiKey = Helpers.Settings.ApiKey;
+            string apiSecret = Helpers.Settings.ApiSecret;
             string meetingNumber = _lLicencesDataInfoObj.GetValue("meetingNumber").ToString();
             String ts = _lLicencesDataInfoObj.GetValue("ts").ToString();
             string role = _lLicencesDataInfoObj.GetValue("role").ToString(); ;
-            string token = GenerateToken(apiKey, apiSecret, meetingNumber, ts, role);
+            string token = GenerateSignature(apiKey, apiSecret, meetingNumber, ts, role);
 
             return Task.FromResult<HttpResponseMessage>(Request.CreateResponse(HttpStatusCode.OK, token));
         }
 
-        public string GenerateToken(string apiKey, string apiSecret, string meetingNumber, string ts, string role)
+        [Route("GenerateToken")]
+        [HttpGet]
+        public Task<HttpResponseMessage> GenerateToken()
+        {
+            try
+            {
+                var token = JwtToken.GenerateToken();
+                return Task.FromResult<HttpResponseMessage>(Request.CreateResponse(HttpStatusCode.OK, token));
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult<HttpResponseMessage>(Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message));
+            }
+        }
+
+        public string GenerateSignature(string apiKey, string apiSecret, string meetingNumber, string ts, string role)
         {
             string message = String.Format("{0}{1}{2}{3}", apiKey, meetingNumber, ts, role);
             apiSecret = apiSecret ?? "";

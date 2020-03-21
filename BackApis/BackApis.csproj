@@ -122,7 +122,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\DefaultController.cs" />
+    <Compile Include="Helpers\IAuthService.cs" />
+    <Compile Include="Helpers\JWTService.cs" />
+    <Compile Include="Helpers\JwtToken.cs" />
+    <Compile Include="Helpers\Settings.cs" />
     <Compile Include="MeetingsControl.cs" />
+    <Compile Include="Models\IAuthContainerModel.cs" />
+    <Compile Include="Models\JWTContainerModel.cs" />
+    <Compile Include="Models\ZoomMeeting.cs" />
+    <Compile Include="Models\ZoomUsers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
