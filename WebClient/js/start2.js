@@ -29,6 +29,9 @@ function getSignature(meetConfig) {
                 leaveUrl: meetConfig.leaveUrl,
                 isSupportAV: true,
                 isShowJoiningErrorDialog: false,
+                disableInvite: true,
+                isSupportChat: false,
+                screenShare: false,
                 success: function () {
                     console.log('ok2 ' + response);
                     ZoomMtg.join({
@@ -42,7 +45,7 @@ function getSignature(meetConfig) {
                         error: function (res) {
                             console.log('err1');
                             console.log(res);
-                            setTimeout(() => { getSignature(meetConfig); }, 500);
+                            setTimeout(() => { getSignature(meetConfig); }, 1000);
                         },
                         success: function (e) {
                             console.log('success');

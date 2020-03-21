@@ -48,11 +48,12 @@ namespace BackApis.Controllers
         [HttpPost]
         public Task<HttpResponseMessage> GetSignature(JObject _lLicencesDataInfoObj)
         {
-            Thread.Sleep(2000);
+            //Thread.Sleep(2000);
             string apiKey = Helpers.Settings.ApiKey;
             string apiSecret = Helpers.Settings.ApiSecret;
             string meetingNumber = _lLicencesDataInfoObj.GetValue("meetingNumber").ToString();
-            String ts = _lLicencesDataInfoObj.GetValue("ts").ToString();
+            //String ts = _lLicencesDataInfoObj.GetValue("ts").ToString();
+            String ts = ToTimestamp(DateTime.Now).ToString();
             string role = _lLicencesDataInfoObj.GetValue("role").ToString(); ;
             string token = GenerateSignature(apiKey, apiSecret, meetingNumber, ts, role);
 
@@ -72,6 +73,12 @@ namespace BackApis.Controllers
             {
                 return Task.FromResult<HttpResponseMessage>(Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message));
             }
+        }
+
+        public static long ToTimestamp(DateTime value)
+        {
+            long epoch = (value.Ticks - 621355968000000000) / 10000;
+            return epoch;
         }
 
         public string GenerateSignature(string apiKey, string apiSecret, string meetingNumber, string ts, string role)
