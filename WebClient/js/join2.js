@@ -44,7 +44,7 @@ var token;
                             error: function (res) {
                                 console.log('err1');
                                 console.log(res)
-                                setTimeout(() => { getSignature(meetConfig);}, 500);
+                                setTimeout(() => { getSignature(meetConfig);}, 1000);
                             },
                             success: function (e) {
                                 console.log('success');

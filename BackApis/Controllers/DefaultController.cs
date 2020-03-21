@@ -14,6 +14,8 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Threading;
 using BackApis.Helpers;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
 
 namespace BackApis.Controllers
 {
@@ -72,6 +74,33 @@ namespace BackApis.Controllers
             catch (Exception ex)
             {
                 return Task.FromResult<HttpResponseMessage>(Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message));
+            }
+        }
+
+        [Route("EndMeeting/{mid}")]
+        [HttpGet]
+        public Task<HttpResponseMessage> EndMeeting(string mid) 
+        {
+            try
+            {
+                string srvUrl = Helpers.Settings.ZoomApiUrl + $"/meetings/{mid}/status";
+                using (var client = new HttpClient())
+                {
+                    HttpContent content = new StringContent("{\"action\": \"end\"}", Encoding.UTF8, "application/json");
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Helpers.JwtToken.GenerateToken());
+                    var response = client.PutAsync(srvUrl, content).Result;
+                    var responseStr = response.Content.ReadAsStringAsync().Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return Task.FromResult<HttpResponseMessage>(Request.CreateResponse(HttpStatusCode.OK));
+                    }
+                    else
+                        return Task.FromResult<HttpResponseMessage>(Request.CreateResponse(HttpStatusCode.InternalServerError));
+                }
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
 
