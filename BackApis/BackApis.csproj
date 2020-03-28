@@ -126,6 +126,7 @@
     <Compile Include="Helpers\JWTService.cs" />
     <Compile Include="Helpers\JwtToken.cs" />
     <Compile Include="Helpers\Settings.cs" />
+    <Compile Include="MeetingInfo.cs" />
     <Compile Include="MeetingsControl.cs" />
     <Compile Include="Models\IAuthContainerModel.cs" />
     <Compile Include="Models\JWTContainerModel.cs" />

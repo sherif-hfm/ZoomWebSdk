@@ -54,6 +54,62 @@ namespace BackApis.Controllers
             }
         }
 
+        [Route("GetNewMeeting")]
+        [HttpGet]
+        public Task<HttpResponseMessage> GetNewMeeting()
+        {
+            try
+            {
+                string userId = "WVYgh4MITA6Ng-Q5ObWO1A";
+                string srvUrl = Helpers.Settings.ZoomApiUrl + $"/users/{userId}/meetings";
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Helpers.JwtToken.GenerateToken());
+                    MeetingRequest req = new MeetingRequest()
+                    {
+                        agenda = "agenda",
+                        duration = 40,
+                        password = "P@ssw0rd",
+                        type = 1,
+                        topic = "topic",
+                        settings = new MeetingSettings()
+                        {
+                            host_video = true,
+                            participant_video = true,
+                            cn_meeting = false,
+                            in_meeting = false,
+                            join_before_host = false,
+                            mute_upon_entry = false,
+                            watermark = false,
+                            approval_type = 0,
+                            registration_type = 1,
+                            audio = "voip",
+                            auto_recording = "none",
+                            enforce_login = false,
+                            enforce_login_domains = false,
+                            contact_name = "contact_name"
+                        }
+                    };
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(req), Encoding.UTF8, "application/json");
+                    var response = client.PostAsync(srvUrl, content).Result;
+                    var responseStr = response.Content.ReadAsStringAsync().Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var meetingResponse = JsonConvert.DeserializeObject<MeetingResponse>(responseStr);
+                       return Task.FromResult<HttpResponseMessage>(Request.CreateResponse<MeetingResponse>(HttpStatusCode.OK, meetingResponse));
+                    }
+                    else
+                        return Task.FromResult<HttpResponseMessage>(Request.CreateResponse(HttpStatusCode.BadRequest, ""));
+                }
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult<HttpResponseMessage>(Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message));
+            }
+           
+        }
+
+
         [Route("GetSignature")]
         [HttpPost]
         public Task<HttpResponseMessage> GetSignature(JObject _lLicencesDataInfoObj)
@@ -62,8 +118,8 @@ namespace BackApis.Controllers
             string apiKey = Helpers.Settings.ApiKey;
             string apiSecret = Helpers.Settings.ApiSecret;
             string meetingNumber = _lLicencesDataInfoObj.GetValue("meetingNumber").ToString();
-            //String ts = _lLicencesDataInfoObj.GetValue("ts").ToString();
-            String ts = ToTimestamp(DateTime.Now).ToString();
+            String ts = _lLicencesDataInfoObj.GetValue("ts").ToString();
+            //String ts = ToTimestamp(DateTime.Now).ToString();
             string role = _lLicencesDataInfoObj.GetValue("role").ToString(); ;
             string token = GenerateSignature(apiKey, apiSecret, meetingNumber, ts, role);
 

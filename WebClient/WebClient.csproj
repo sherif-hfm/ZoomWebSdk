@@ -83,6 +83,8 @@
     <Content Include="js\join.js" />
     <Content Include="js\start2.js" />
     <Content Include="js\start.js" />
+    <Content Include="RmJoin.html" />
+    <Content Include="RmStart.html" />
     <Content Include="start2.html" />
     <Content Include="start.html" />
     <Content Include="Web.config" />
