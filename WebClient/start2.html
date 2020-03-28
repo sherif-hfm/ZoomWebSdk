@@ -6,13 +6,27 @@
     <!-- import #zmmtg-root css -->
     <link type="text/css" rel="stylesheet" href="https://source.zoom.us/1.7.2/css/bootstrap.css" />
     <link type="text/css" rel="stylesheet" href="https://source.zoom.us/1.7.2/css/react-select.css" />
+    <link href="https://fonts.googleapis.com/css?family=Amiri|Cairo&display=swap" rel="stylesheet">
     <style>
         span[role="toolbar"]:first-child {
-            display: none !important
+            display: none !important;
+        }
+        #zmmtg-root {
+            font-family: 'Amiri';
+            font-size:14px;
+        }
+        .footer__leave-btn-text {
+            font-size: 22px;
         }
     </style>
 </head>
 <body>
+    <div id="top" style="position:absolute;width: 100%;left:0px;top:0px;z-index: 1 !important;text-align: center;font-family: 'Amiri', serif;font-size: 23px;color:white">
+        <span>حلقة الشيخ عبد الباسط</span>
+        <span style="width:20%;display:inline-block !important;font-family: 'Cairo', sans-serif;"> الحلقة الذكية </span>
+        <span>الباقي من الزمن:</span>
+        <span id="sTimer"></span>
+    </div>
     <!-- import ZoomMtg dependencies -->
     <script src="https://source.zoom.us/1.7.2/lib/vendor/react.min.js"></script>
     <script src="https://source.zoom.us/1.7.2/lib/vendor/react-dom.min.js"></script>
@@ -27,7 +41,15 @@
     <!-- import local .js file -->
     <script src="js/info.js"></script>
     <script src="js/start2.js"></script>
-
+    <script type="text/javascript">
+        var startTime = new Date().getTime();
+        var sTimer = document.getElementById('sTimer');
+        setInterval(() => {
+            var remainingTime = new Date(2400000 - (Date.now() - startTime));
+            sTimer.innerHTML = remainingTime.getMinutes() + ":" + ("0" + remainingTime.getSeconds()).slice(-2) ;
+        }, 1000);
+        
+    </script>
 
 </body>
 </html>

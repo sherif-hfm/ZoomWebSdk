@@ -60,6 +60,7 @@ var userLangDict = Object.assign({}, userLangTemplate, {
     , 'apac.dialog.you_are_removed': "تم إخراجك من الجلسة"
     , 'apac.dialog.meeting_removed_by_host': "تم إخراجك من الجلسة بواسطة المدير."
     , 'apac.dialog.btn_exit': "خروج"
+    , 'apac.wc_video.video': "الفديو"
 
 });
 $.i18n.load(userLangDict, "Arabic");

@@ -31,6 +31,14 @@ namespace BackApis.Controllers
             return Task.FromResult<HttpResponseMessage>(Request.CreateResponse(HttpStatusCode.OK, "Test OK"));
         }
 
+        [Route("Test2")]
+        [HttpGet]
+        public Task<HttpResponseMessage> Test2()
+        {
+            Thread.Sleep(5000);
+            return Task.FromResult<HttpResponseMessage>(Request.CreateResponse(HttpStatusCode.OK, "Test OK"));
+        }
+
         [Route("GetMeeting")]
         [HttpGet]
         public Task<HttpResponseMessage> GetMeeting()
